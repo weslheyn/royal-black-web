@@ -19,7 +19,18 @@ jobs:
         with:
           node-version: '20'
       - run: npm install --no-audit --no-fund
-      - run: npm run build
+      - name: Validate public Supabase build configuration
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          if [ -z "$VITE_SUPABASE_URL" ] || [ -z "$VITE_SUPABASE_PUBLISHABLE_KEY" ]; then
+            echo "::error::Supabase build variables missing. Set both VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY as repository Actions variables."
+            exit 1
+          fi
+          echo "Supabase public build variables are present (values hidden)."
+      - name: Build site with Supabase configuration
+        run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
