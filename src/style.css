@@ -62,3 +62,12 @@ select,input{accent-color:#d9b778}
 @media(max-width:1100px){main{padding:23px 22px 40px}.sidebar{width:210px}.metric strong{font-size:20px}}
 @media(max-width:800px){.sidebar{width:100%;height:auto;position:relative;padding:14px}.sidebar nav{display:flex}.brand{padding-bottom:14px}main{padding:17px 13px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{padding:15px;min-height:95px}.metric strong{font-size:17px}.panel{padding:15px}.status{font-size:10px}}
 @media(max-width:440px){.cards{grid-template-columns:1fr 1fr;gap:8px}.metric{padding:12px}.metric strong{font-size:15px}.metric span{font-size:10px}}
+
+/* Separate account views; switching is display-only until MT4 real-account integration is verified. */
+.rb-mode-switch{display:inline-flex;gap:3px;padding:3px;background:#0c1725;border:1px solid #354459;border-radius:8px}
+.rb-mode-switch button{border:0;background:transparent;color:#9cafc5;padding:8px 12px;border-radius:5px;font-size:12px;font-weight:700}
+.rb-mode-switch button.selected{background:#304057;color:#f3d59d;box-shadow:0 1px 5px #0004}
+.rb-mode-switch button:hover{color:#fff}
+.rb-real-status{border-color:#796344;background:linear-gradient(145deg,#18273a,#121d2c);max-width:850px}
+.rb-real-status p{color:#bfcee0;line-height:1.75;font-size:13px}
+@media(max-width:800px){.rb-mode-switch{width:100%}.rb-mode-switch button{flex:1}}
