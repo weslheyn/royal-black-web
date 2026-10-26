@@ -71,3 +71,11 @@ select,input{accent-color:#d9b778}
 .rb-real-status{border-color:#796344;background:linear-gradient(145deg,#18273a,#121d2c);max-width:850px}
 .rb-real-status p{color:#bfcee0;line-height:1.75;font-size:13px}
 @media(max-width:800px){.rb-mode-switch{width:100%}.rb-mode-switch button{flex:1}}
+
+/* Real-account modules remain individually navigable, without mixing simulation data. */
+.rb-real-module-head{border-bottom:1px solid #304057;padding-bottom:13px;margin-bottom:19px}
+.rb-real-module-head h3{margin:9px 0 0;color:#f1f5fb;font-size:20px}
+.rb-account-summary{font-size:12px;color:#9fb4ca;margin:16px 0}
+.rb-module-empty{background:#101b2a;border:1px dashed #40526b;border-radius:9px;padding:28px 24px;margin-top:20px;max-width:850px}
+.rb-module-empty strong{font-size:16px;color:#edcb8d}
+.rb-module-empty p{color:#aabbd0;line-height:1.65;margin:12px 0 0}
