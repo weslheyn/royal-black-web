@@ -31,12 +31,12 @@ export default function LiveDashboard({onDemo}){
   const sameSession=()=>epoch===refreshEpoch.current;
   refreshInFlight.current=true;setBusy(true);setError('');
   try{
-   let {data:accounts,error:aerr}=await supabase.from('sim_accounts').select('id,name,currency,initial_balance').order('created_at',{ascending:true}).limit(1);
+   let {data:accounts,error:aerr}=await supabase.from('sim_accounts').select('id,name,currency,initial_balance,fixed_lots').order('created_at',{ascending:true}).limit(1);
    if(aerr)throw aerr;
    if(!accounts?.length){
     const {error:rpcError}=await supabase.rpc('royal_create_initial_account');
     if(rpcError)throw rpcError;
-    ({data:accounts,error:aerr}=await supabase.from('sim_accounts').select('id,name,currency,initial_balance').limit(1));
+    ({data:accounts,error:aerr}=await supabase.from('sim_accounts').select('id,name,currency,initial_balance,fixed_lots').limit(1));
     if(aerr)throw aerr;
    }
    const current=accounts?.[0];if(!current)throw new Error('Não foi possível obter a conta virtual.');
@@ -122,10 +122,10 @@ export default function LiveDashboard({onDemo}){
  const panel=(title,content)=><section className="panel"><h3>{title}</h3>{content}</section>;
  return <div className="layout"><aside className="sidebar"><div className="brand">ROYAL <span>BLACK</span><small>FOREX SIMULATOR</small></div><nav>{modules.map(m=><button key={m} className={module===m?'active':''} onClick={()=>setModule(m)}>{m}</button>)}</nav><div className="sidefoot">MT4: {online?'ONLINE':'sem heartbeat recente'}<br/>Ambiente: dados reais · diagnóstico</div></aside><main><header><div><span className="eyebrow">ROYAL BLACK / {module}</span><h1>{module}</h1></div><div className="auth-actions"><span className="status">● {online?'MT4 ONLINE':'AGUARDANDO MT4'}</span><button onClick={refresh} disabled={busy}>Atualizar</button><button onClick={onDemo}>Demonstração</button><button onClick={()=>supabase.auth.signOut()}>Sair</button></div></header><div className="notice">Conectado ao Supabase · dados reais, sem valores ilustrativos. {lastUpdated?'Última atualização: '+lastUpdated.toLocaleTimeString('pt-BR')+'. ':''} Grid M5: operações virtuais persistentes com STOP e alvo 5 por cotação recebida. Resultado em R, não USD. Sem ordens reais.</div>{error&&<p role="alert">{error}</p>}{notice&&<p>{notice}</p>}
  {module==='Dashboard'&&<>{financialPanel}{!usdReady&&<p className="notice">Os resultados em USD dependem de contratos verificados e lote configurado. Os sinais M5 já são acompanhados em R, sem inventar lucro financeiro.</p>}<div className="twocol">{panel('Desempenho diário · R',rChart)}{panel('Grid M5 · estatísticas',m5Stats)}</div>{panel('Últimas operações virtuais · Grid M5',<div style={{maxHeight:460,overflowY:'auto'}}>{m5Table}</div>)}{panel('Desempenho por par',m5SymbolTable)}</>}
- {module==='Calendário'&&panel('Resultados por dia',calendar)}
- {module==='Performance'&&<>{financialPanel}{panel('Grid M5 · estatísticas',m5Stats)}{panel('Grid M5 · desempenho por par',m5SymbolTable)}{panel('Resultados por par',<div className="table-scroll"><table><tbody>{pairs.map(p=><tr key={p.symbol}><td>{p.symbol}</td><td>{money(p.net_pnl)}</td></tr>)}</tbody></table></div>)}</>}
- {module==='Operações abertas'&&panel('Grid M5 · operações virtuais',m5Table)}{['Histórico','Detalhe da operação'].includes(module)&&panel(module,tradeTable)}
- {['Por par','Por período','Relatórios'].includes(module)&&panel(module,<><p>Resultados reais da conta virtual. Sem projeções ilustrativas.</p>{tradeTable}</>)}
+ {module==='Calendário'&&panel('Resultados virtuais por dia · R',rChart)}
+ {module==='Performance'&&<>{financialPanel}{panel('Grid M5 · estatísticas',m5Stats)}{panel('Grid M5 · desempenho por par',m5SymbolTable)}</>}
+ {module==='Operações abertas'&&panel('Grid M5 · operações virtuais',m5Table)}{['Histórico','Detalhe da operação'].includes(module)&&panel(module,m5Table)}
+ {['Por par','Por período','Relatórios'].includes(module)&&<>{panel('Estatísticas Grid M5',m5Stats)}{panel('Desempenho por par',m5SymbolTable)}{panel('Operações virtuais',m5Table)}</>}
  {module==='Desalinhamentos'&&panel('Desalinhamentos registrados',<p>{trades.filter(t=>t.had_misalignment).length} operações com desalinhamento registrado. Diagnósticos não confirmam alinhamento operacional.</p>)}
  {module==='Alertas'&&panel('Diagnósticos MT4',signalTable)}
  {module==='Configurações'&&<><DevicePairing accountId={account.id}/>{panel('Segurança',<p>Somente diagnósticos. Nenhuma operação real ou virtual é iniciada pelo painel.</p>)}</>}
